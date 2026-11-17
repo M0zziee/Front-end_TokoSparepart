@@ -1,14 +1,14 @@
 export type Category = {
-  id: number;
+  id: string;
   name: string;
   createdAt: string;
 };
 
 export type Product = {
-  id: number;
+  id: string;
   sku: string;
   name: string;
-  categoryId: number | null;
+  categoryId: string | null;
   price: number;
   active: boolean;
   createdAt: string;
@@ -18,8 +18,8 @@ export type Product = {
 export type StockMovementType = "in" | "out" | "adjustment";
 
 export type StockMovement = {
-  id: number;
-  productId: number;
+  id: string;
+  productId: string;
   type: StockMovementType;
   qty: number;
   note: string | null;
@@ -27,15 +27,15 @@ export type StockMovement = {
 };
 
 export type SaleItem = {
-  id: number;
-  saleId: number;
-  productId: number;
+  id: string;
+  saleId: string;
+  productId: string;
   qty: number;
   price: number;
 };
 
 export type Sale = {
-  id: number;
+  id: string;
   total: number;
   paid: number;
   change: number;
