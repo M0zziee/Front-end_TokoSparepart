@@ -54,7 +54,7 @@ src/
 └── types/
 ```
 
-Panggilan API lewat `src/lib/api.ts` (`api()`), bukan `fetch` langsung. Halaman masih placeholder sampai modul backend terkait selesai.
+Panggilan API lewat `src/lib/api.ts` (`api()`), bukan `fetch` langsung. Halaman Produk sudah memakai API (daftar, tambah, nonaktifkan). Halaman lain masih placeholder sampai modul backend terkait selesai.
 
 ## Deployment (Vercel)
 

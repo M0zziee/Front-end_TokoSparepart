@@ -9,6 +9,7 @@ export type Product = {
   sku: string;
   name: string;
   categoryId: string | null;
+  categoryName: string | null;
   price: number;
   active: boolean;
   createdAt: string;
