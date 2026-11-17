@@ -21,11 +21,13 @@ Web app POS dan manajemen stok toko sparepart. Repo terpisah dari backend ([`Bac
 npm install
 ```
 
-Salin `.env.example` menjadi `.env.local`, lalu isi base URL API:
+Salin `.env.example` menjadi `.env.local`, lalu isi URL backend untuk rewrite:
 
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:3001
+API_URL=http://localhost:3001
 ```
+
+Browser memanggil `/api/*` di origin frontend; Next mem-proxy ke backend. Cookie sesi jadi first-party, tidak perlu CORS di jalur ini. `NEXT_PUBLIC_API_URL` hanya dipakai jika ingin memanggil backend langsung tanpa proxy.
 
 ```bash
 npm run dev
@@ -56,6 +58,13 @@ src/
 
 Panggilan API lewat `src/lib/api.ts` (`api()`), bukan `fetch` langsung. Halaman Produk sudah memakai API (daftar, tambah, nonaktifkan). Halaman lain masih placeholder sampai modul backend terkait selesai.
 
+## Auth & Role
+
+- Login lewat `/login`; sesi dibaca `SessionProvider` (`src/lib/session.tsx`) dari `GET /auth/me`.
+- `ADMIN`: semua menu. `KASIR`: dashboard, produk (baca), stok (baca), penjualan. Menu Laporan disembunyikan dan `/reports` diarahkan ke `/sales`.
+- Form tambah produk dan tombol nonaktifkan hanya muncul untuk `ADMIN`. Backend tetap menolak request kasir (403), UI bukan pengaman.
+- Logout ada di footer sidebar.
+
 ## Deployment (Vercel)
 
 Repo ini satu project Vercel.
@@ -63,7 +72,7 @@ Repo ini satu project Vercel.
 1. Import repo ini ke Vercel.
 2. Environment variables:
    ```env
-   NEXT_PUBLIC_API_URL=https://<domain-backend-vercel>
+   API_URL=https://<domain-backend-vercel>
    ```
 3. Deploy. Pastikan `FRONTEND_ORIGIN` di project backend sudah berisi domain Vercel ini.
 

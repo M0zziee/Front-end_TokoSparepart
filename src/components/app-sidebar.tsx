@@ -24,17 +24,23 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useSession } from "@/lib/session";
 
 const navItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboardIcon },
   { title: "Produk", url: "/products", icon: PackageIcon },
   { title: "Stok", url: "/stock", icon: BoxesIcon },
   { title: "Penjualan", url: "/sales", icon: ReceiptTextIcon },
-  { title: "Laporan", url: "/reports", icon: ChartBarIcon },
+  { title: "Laporan", url: "/reports", icon: ChartBarIcon, adminOnly: true },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
+  const { user, logout } = useSession();
+
+  const items = navItems.filter(
+    (item) => !item.adminOnly || user?.role === "ADMIN",
+  );
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -55,7 +61,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navItems.map((item) => (
+              {items.map((item) => (
                 <SidebarMenuItem key={item.url}>
                   <SidebarMenuButton
                     isActive={pathname === item.url}
@@ -74,14 +80,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" render={<Link href="/login" />}>
+            <SidebarMenuButton
+              size="lg"
+              tooltip="Keluar"
+              onClick={() => void logout()}
+            >
               <Avatar className="size-8 rounded-lg">
-                <AvatarFallback className="rounded-lg">BJ</AvatarFallback>
+                <AvatarFallback className="rounded-lg">
+                  {user?.name.slice(0, 2).toUpperCase() ?? "BJ"}
+                </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">Admin</span>
+                <span className="truncate font-medium">{user?.name}</span>
                 <span className="truncate text-xs text-foreground/70">
-                  Keluar
+                  {user?.role === "ADMIN" ? "Admin" : "Kasir"} · Keluar
                 </span>
               </div>
               <LogOutIcon className="ml-auto size-4" />

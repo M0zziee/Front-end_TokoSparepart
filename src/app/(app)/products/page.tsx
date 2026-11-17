@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/table";
 import { api, ApiError } from "@/lib/api";
 import { formatRupiah } from "@/lib/format";
+import { useSession } from "@/lib/session";
 import type { Category, Product } from "@/types";
 
 function errorMessage(err: unknown, fallback: string): string {
@@ -35,6 +36,9 @@ function errorMessage(err: unknown, fallback: string): string {
 }
 
 export default function ProductsPage() {
+  const { user } = useSession();
+  const isAdmin = user?.role === "ADMIN";
+
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -118,6 +122,7 @@ export default function ProductsPage() {
         </p>
       )}
 
+      {isAdmin && (
       <Card>
         <CardHeader>
           <CardTitle>Tambah produk</CardTitle>
@@ -194,6 +199,7 @@ export default function ProductsPage() {
           </form>
         </CardContent>
       </Card>
+      )}
 
       <Card>
         <CardHeader>
@@ -214,7 +220,7 @@ export default function ProductsPage() {
                   <TableHead>Nama</TableHead>
                   <TableHead>Kategori</TableHead>
                   <TableHead className="text-right">Harga</TableHead>
-                  <TableHead className="text-right">Aksi</TableHead>
+                  {isAdmin && <TableHead className="text-right">Aksi</TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -232,15 +238,17 @@ export default function ProductsPage() {
                     <TableCell className="text-right tabular-nums">
                       {formatRupiah(product.price)}
                     </TableCell>
-                    <TableCell className="text-right">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => void handleDeactivate(product)}
-                      >
-                        Nonaktifkan
-                      </Button>
-                    </TableCell>
+                    {isAdmin && (
+                      <TableCell className="text-right">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => void handleDeactivate(product)}
+                        >
+                          Nonaktifkan
+                        </Button>
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))}
               </TableBody>

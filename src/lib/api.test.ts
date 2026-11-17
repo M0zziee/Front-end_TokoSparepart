@@ -22,8 +22,9 @@ describe("api", () => {
 
     await expect(api("/health")).resolves.toEqual({ status: "ok" });
     expect(fetchMock).toHaveBeenCalledWith(
-      "http://localhost:3001/health",
+      "/api/health",
       expect.objectContaining({
+        credentials: "include",
         headers: expect.objectContaining({
           "Content-Type": "application/json",
         }),

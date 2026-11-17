@@ -1,3 +1,10 @@
+export type SessionUser = {
+  id: string;
+  username: string;
+  name: string;
+  role: "ADMIN" | "KASIR";
+};
+
 export type Category = {
   id: string;
   name: string;

@@ -1,7 +1,11 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { LoginForm } from "./login-form";
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ replace: vi.fn(), push: vi.fn() }),
+}));
 
 describe("LoginForm", () => {
   it("menampilkan field username dan password", () => {
@@ -11,9 +15,9 @@ describe("LoginForm", () => {
     expect(screen.getByLabelText("Password")).toBeInTheDocument();
   });
 
-  it("menonaktifkan tombol login selama autentikasi belum tersedia", () => {
+  it("tombol login aktif", () => {
     render(<LoginForm />);
 
-    expect(screen.getByRole("button", { name: "Login" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Login" })).toBeEnabled();
   });
 });
